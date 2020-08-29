@@ -1,2 +1,3 @@
 # vic-api
-Victoria Christadelphian Ecclesial API
+
+CoEventtoria Christadelphian Ecclesial API

@@ -1,0 +1,31 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:1080",
+      "sslPort": 44343
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "filestation/files?path=/talks/Bible Classes",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings__ApiData": "SERVER=localhost,5433;DATABASE=coevent;"
+      }
+    },
+    "CoEvent.Api": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "launchUrl": "filestation/files?path=/talks/Bible Classes",
+      "applicationUrl": "https://localhost:10443;http://localhost:1080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "VS"
+      }
+    }
+  }
+}

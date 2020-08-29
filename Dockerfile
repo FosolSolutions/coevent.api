@@ -17,10 +17,10 @@ RUN dotnet tool install --global dotnet-ef --version 3.1.0
 # Copy everything else and build
 
 WORKDIR /src/api
-RUN dotnet build "Vic.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
+RUN dotnet build "CoEvent.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Vic.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish
+RUN dotnet publish "CoEvent.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish
 
 # Runtime image
 FROM base AS final

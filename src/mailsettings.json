@@ -1,0 +1,10 @@
+﻿{
+  "Mail": {
+    "FromEmail": "jeremymfoster@hotmail.com",
+    "Host": "smtp.office365.com",
+    "Port": "587",
+    "EnableSsl": "true",
+    "UseDefaultCredentials": "false",
+    "Timeout": "15000"
+  }
+}

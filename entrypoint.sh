@@ -1,2 +1,2 @@
 #!/bin/bash
-dotnet Vic.Api.dll
+dotnet CoEvent.Api.dll

@@ -1,11 +1,13 @@
-#
-# MariaDB Dockerfile
-#
-# https://github.com/dockerfile/mariadb
-#
+FROM mcr.microsoft.com/mssql/rhel/server:2019-latest
 
-# Pull base image.
-FROM mariadb
+RUN mkdir -p /usr/config
+WORKDIR /usr/config
+COPY . /usr/config
 
-# Expose ports.
-EXPOSE 3306
+# Make sure GIT has the following permissions set.
+# RUN chmod +x ./entrypoint.sh
+# RUN chmod +x ./setup.sh
+ENTRYPOINT ["./entrypoint.sh"]
+
+EXPOSE 1433
+VOLUME ["/var/opt/mssql"]
