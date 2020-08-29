@@ -31,3 +31,5 @@ RUN chmod +x /app/entrypoint.sh
 
 # CMD tail -f /dev/null
 ENTRYPOINT ["/app/entrypoint.sh"]
+
+
