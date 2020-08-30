@@ -10,14 +10,14 @@ using System.Linq;
 namespace CoEvent.Api.Areas.Data.Controllers
 {
     /// <summary>
-    /// EventController sealed class, provides API endpoints for calendar events.
+    /// EventsController sealed class, provides API endpoints for calendar events.
     /// </summary>
     [Produces("application/json")]
     [Area("data")]
-    [Route("[area]/calendar/[controller]")]
+    [Route("[area]/calendars/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class EventController : ApiController
+    public sealed class EventsController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -25,10 +25,10 @@ namespace CoEvent.Api.Areas.Data.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a EventController object.
+        /// Creates a new instance of a EventsController object.
         /// </summary>
         /// <param name="datasource"></param>
-        public EventController(IDataSource datasource)
+        public EventsController(IDataSource datasource)
         {
             _dataSource = datasource;
         }
@@ -55,7 +55,7 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// <param name="startOn">The start date for the calendar to return.  Defaults to now.</param>
         /// <param name="endOn">The end date for the calendar to return.</param>
         /// <returns>An array of events.</returns>
-        [HttpGet("/[area]/calendar/{id}/events")]
+        [HttpGet("/[area]/calendars/{id}/events")]
         public IActionResult GetEventsForCalendar(int id, DateTime? startOn = null, DateTime? endOn = null)
         {
             var start = startOn ?? DateTime.UtcNow;
@@ -74,7 +74,7 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// </summary>
         /// <param name="ids">A comma-separated list of event 'id' values (i.e. ids=1,2,3,4).</param>
         /// <returns></returns>
-        [HttpGet("/[area]/calendar/events")]
+        [HttpGet()]
         public IActionResult GetEvents([FromQuery] string ids)
         {
             var values = ids?.Split(',').Select(v => v.Trim().ConvertTo<int>()).Distinct().ToArray();

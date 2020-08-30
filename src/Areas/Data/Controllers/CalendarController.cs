@@ -9,14 +9,14 @@ using System;
 namespace CoEvent.Api.Areas.Data.Controllers
 {
     /// <summary>
-    /// CalendarController class, provides API endpoints for calendars.
+    /// CalendarsController class, provides API endpoints for calendars.
     /// </summary>
     [Produces("application/json")]
     [Area("data")]
     [Route("[area]/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class CalendarController : ApiController
+    public sealed class CalendarsController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -25,11 +25,11 @@ namespace CoEvent.Api.Areas.Data.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a CalendarController object.
+        /// Creates a new instance of a CalendarsController object.
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="mailClient"></param>
-        public CalendarController(IDataSource dataSource, MailClient mailClient)
+        public CalendarsController(IDataSource dataSource, MailClient mailClient)
         {
             _dataSource = dataSource;
             _mailClient = mailClient;
@@ -42,7 +42,7 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// </summary>
         /// <param name="page">The page number (default: 1).</param>
         /// <returns>An array calendar JSON data objects.</returns>
-        [HttpGet("/[area]/calendars")]
+        [HttpGet]
         public IActionResult GetCalendars(int page)
         {
             var skip = page <= 0 ? 0 : page - 1;

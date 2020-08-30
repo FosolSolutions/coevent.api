@@ -76,7 +76,7 @@ namespace CoEvent.Data.Services
         /// <returns></returns>
         public IEnumerable<int> GetEventIdsForSchedule(int scheduleId)
         {
-            return this.Context.Schedules.Where(s => s.Id == scheduleId).SelectMany(s => s.Events.Select(e => e.EventId)).ToArray();
+            return this.Context.Schedules.Where(s => s.Id == scheduleId).ToArray().SelectMany(s => s.Events.Select(e => e.EventId)).ToArray();
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace CoEvent.Data.Services
                 .Include(e => e.Activities).ThenInclude(a => a.Openings).ThenInclude(o => o.Criteria).ThenInclude(c => c.Criteria)
                 .Where(e => e.CalendarId == calendarId && ids.Contains(e.Id));
 
-            return events.Select(e => this.Map(e)).ToArray();
+            return events.ToArray().Select(e => this.Map(e)).ToArray();
         }
         #endregion
     }
