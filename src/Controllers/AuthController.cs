@@ -88,21 +88,11 @@ namespace CoEvent.Api.Controllers
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        [HttpPost("token/participant/{key}")]
+        [HttpPost("token/participant")]
         public async Task<IActionResult> ParticipantToken(Guid key)
         {
-            var participant = _dataSource.Participants.Get(key);
-            var identity = _dataSource.Participants.CreateIdentity(key);
-            if (identity == null)
-                return Unauthorized();
-
-            var id = identity.GetParticipant().Value.ConvertTo<int>();
-            _logger.LogInformation($"Participant '{id}' signed in.");
-
-            var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-            return Ok(participant);
+            var participant = _auth.FindParticipant(key);
+            return new JsonResult(await _auth.AuthenticateAsync(participant));
         }
 
         /// <summary>

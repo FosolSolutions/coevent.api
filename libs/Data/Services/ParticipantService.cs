@@ -1,6 +1,4 @@
 ﻿using CoEvent.Core.Exceptions;
-using CoEvent.Core.Extensions;
-using CoEvent.Data.Helpers;
 using CoEvent.Data.Interfaces;
 using CoEvent.Data.Entities;
 using Microsoft.EntityFrameworkCore;
