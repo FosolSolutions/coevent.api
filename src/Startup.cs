@@ -113,7 +113,7 @@ namespace CoEvent.Api
 
             services.AddCors(options =>
             {
-                var withOrigins = this.Configuration.GetSection("Cors:WithOrigins").Value.Split(" ");
+                var withOrigins = this.Configuration.GetSection("Cors:WithOrigins").Value?.Split(" ");
                 options.AddPolicy(name: AllowedOrigins,
                     builder =>
                     {
