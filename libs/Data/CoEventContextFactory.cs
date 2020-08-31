@@ -68,17 +68,17 @@ namespace CoEvent.Data
             var config = builder.Build();
 
             var cs = config.GetConnectionString("ApiData");
+            var csb = new SqlConnectionStringBuilder(cs);
+
+            var userId = config["DB_USERID"];
+            var password = config["DB_PASSWORD"];
+            if (!String.IsNullOrWhiteSpace(userId)) csb.UserID = userId;
+            if (!String.IsNullOrWhiteSpace(password)) csb.Password = password;
 
             _logger.LogInformation($"Creating database context for '{environment}':'{cs}'.");
 
-            var sqlBuilder = new SqlConnectionStringBuilder(cs)
-            {
-                UserID = config["DB_USERID"],
-                Password = config["DB_PASSWORD"]
-            };
-
             var optionsBuilder = new DbContextOptionsBuilder<CoEventContext>();
-            optionsBuilder.UseSqlServer(sqlBuilder.ConnectionString, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
+            optionsBuilder.UseSqlServer(csb.ConnectionString, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
             return new CoEventContext(optionsBuilder.Options);
         }
         #endregion
