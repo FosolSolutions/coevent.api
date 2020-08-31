@@ -21,15 +21,11 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build and Push to Azure Docker Registry - Fosol
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'Docker Hub - Fosol'
+        containerRegistry: 'Azure Docker Registry - Fosol'
         repository: 'coevent-api'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
+        tags: |
+          latest
