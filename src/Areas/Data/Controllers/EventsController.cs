@@ -78,7 +78,7 @@ namespace CoEvent.Api.Areas.Data.Controllers
         public IActionResult GetEvents([FromQuery] string ids)
         {
             var values = ids?.Split(',').Select(v => v.Trim().ConvertTo<int>()).Distinct().ToArray();
-            var cevents = _dataSource.Events.Get(values);
+            var cevents = _dataSource.Events.Get(values).OrderBy(e => e.StartOn);
             return Ok(cevents);
         }
         #endregion

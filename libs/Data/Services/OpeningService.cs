@@ -71,8 +71,9 @@ namespace CoEvent.Data.Services
 
             var openings = (
                 from o in this.Context.Openings
-                    .Include(a => a.Criteria)
+                    .Include(a => a.Criteria).ThenInclude(c => c.Criteria)
                     .Include(o => o.Tags)
+                    .Include(o => o.Questions).ThenInclude(q => q.Answers)
                     .Include(o => o.Participants).ThenInclude(op => op.Participant)
                 where o.Activity.Event.CalendarId == calendarId
                     && o.Activity.StartOn >= startOn

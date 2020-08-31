@@ -7,13 +7,13 @@ using System;
 namespace CoEvent.Api.Areas.Data.Controllers
 {
     /// <summary>
-    /// ActivityController sealed class, provides API endpoints for calendar event activities.
+    /// ActivitiesController sealed class, provides API endpoints for calendar event activities.
     /// </summary>
     [Produces("application/json")]
     [Area("data")]
-    [Route("[area]/calendar/event/[controller]")]
+    [Route("[area]/calendars/events/[controller]")]
     [Authorize]
-    public sealed class ActivityController : ApiController
+    public sealed class ActivitiesController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -21,10 +21,10 @@ namespace CoEvent.Api.Areas.Data.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a ActivityController object.
+        /// Creates a new instance of a ActivitiesController object.
         /// </summary>
         /// <param name="datasource"></param>
-        public ActivityController(IDataSource datasource)
+        public ActivitiesController(IDataSource datasource)
         {
             _dataSource = datasource;
         }
@@ -51,7 +51,7 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// <param name="startOn">The start date for the calendar to return.  Defaults to now.</param>
         /// <param name="endOn">The end date for the calendar to return.</param>
         /// <returns>An array of activities.</returns>
-        [HttpGet("/[area]/calendar/{id}/activities")]
+        [HttpGet("/[area]/calendars/{id}/activities")]
         public IActionResult GetActivitiesForCalendar(int id, DateTime? startOn = null, DateTime? endOn = null)
         {
             var start = startOn ?? DateTime.UtcNow;

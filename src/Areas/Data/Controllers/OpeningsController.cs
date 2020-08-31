@@ -12,10 +12,10 @@ namespace CoEvent.Api.Areas.Data.Controllers
     /// </summary>
     [Produces("application/json")]
     [Area("data")]
-    [Route("[area]/calendar/event/activity/[controller]")]
+    [Route("[area]/calendars/events/activities/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class OpeningController : ApiController
+    public sealed class OpeningsController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -23,10 +23,10 @@ namespace CoEvent.Api.Areas.Data.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a OpeningController object.
+        /// Creates a new instance of a OpeningsController object.
         /// </summary>
         /// <param name="datasource"></param>
-        public OpeningController(IDataSource datasource)
+        public OpeningsController(IDataSource datasource)
         {
             _dataSource = datasource;
         }
@@ -52,7 +52,7 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// <param name="startOn">The start date for the calendar to return.  Defaults to now.</param>
         /// <param name="endOn">The end date for the calendar to return.</param>
         /// <returns>An array of events.</returns>
-        [HttpGet("/[area]/calendar/{id}/openings")]
+        [HttpGet("/[area]/calendars/{id}/openings")]
         public IActionResult GetOpeningsForCalendar(int id, DateTime? startOn = null, DateTime? endOn = null)
         {
             var start = startOn ?? DateTime.UtcNow;

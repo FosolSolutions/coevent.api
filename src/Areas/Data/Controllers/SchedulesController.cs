@@ -16,7 +16,7 @@ namespace CoEvent.Api.Areas.Data.Controllers
     [Route("[area]/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class ScheduleController : ApiController
+    public sealed class SchedulesController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -24,10 +24,10 @@ namespace CoEvent.Api.Areas.Data.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a ScheduleController object.
+        /// Creates a new instance of a SchedulesController object.
         /// </summary>
         /// <param name="dataSource"></param>
-        public ScheduleController(IDataSource dataSource)
+        public SchedulesController(IDataSource dataSource)
         {
             _dataSource = dataSource;
         }
