@@ -21,7 +21,7 @@ namespace CoEvent.Data
             {
                 var datasource = scope.ServiceProvider.GetService<IDataSource>();
                 //datasource.EnsureCreated();
-                datasource.Migrate();
+                // datasource.Migrate();
                 //datasource.EnsureDeleted();
             }
 
