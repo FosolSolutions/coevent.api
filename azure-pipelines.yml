@@ -1,4 +1,10 @@
 # Docker
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker Hub - Fosol'
+    repository: 'coevent-api'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
 # Build a Docker image 
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
