@@ -31,5 +31,5 @@ stages:
       inputs:
         containerRegistry: 'Docker Hub - Fosol'
         repository: 'coevent-api'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        command: 'push'
+        Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
