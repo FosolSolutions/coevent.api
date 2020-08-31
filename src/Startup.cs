@@ -18,6 +18,7 @@ using CoEvent.Api.Helpers.Mail;
 using CoEvent.Api.Helpers.Middleware;
 using CoEvent.Api.Helpers;
 using CoEvent.Core.Mvc;
+using System.Linq;
 
 namespace CoEvent.Api
 {
@@ -113,15 +114,18 @@ namespace CoEvent.Api
 
             services.AddCors(options =>
             {
-                var withOrigins = this.Configuration.GetSection("Cors:WithOrigins").Value?.Split(" ");
-                options.AddPolicy(name: AllowedOrigins,
-                    builder =>
-                    {
-                        builder
-                            .WithOrigins(withOrigins)
-                            .AllowAnyHeader()
-                            .AllowAnyMethod(); ;
-                    });
+                var withOrigins = this.Configuration.GetSection("Cors:WithOrigins").Value?.Split(" ") ?? new string[0];
+                if (withOrigins.Any())
+                {
+                    options.AddPolicy(name: AllowedOrigins,
+                        builder =>
+                        {
+                            builder
+                                .WithOrigins(withOrigins)
+                                .AllowAnyHeader()
+                                .AllowAnyMethod(); ;
+                        });
+                }
             });
 
             var config = this.Configuration.GetSection("Authentication").Get<CoEventAuthenticationOptions>();

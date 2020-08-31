@@ -15,7 +15,7 @@ namespace CoEvent.Data
     public static class ServiceCollectionExtensions
     {
         #region Variables
-        private const string ConnectionStringName = "CoEventWeb";
+        private const string ConnectionStringName = "ApiData";
         private const string DbUserId = "DB_USERID";
         private const string DbPassword = "DB_PASSWORD";
         #endregion
@@ -152,7 +152,7 @@ namespace CoEvent.Data
         {
             return services.AddDataSource(options =>
             {
-                var connectionString = configuration.GetConnectionString("ApiData") ?? @"Server=(localdb)\mssqllocaldb;Database=EFProviders.InMemory;Trusted_Connection=True;ConnectRetryCount=0";
+                var connectionString = configuration.GetConnectionString(ConnectionStringName) ?? @"Server=(localdb)\mssqllocaldb;Database=EFProviders.InMemory;Trusted_Connection=True;ConnectRetryCount=0";
                 var builder = new SqlConnectionStringBuilder(connectionString);
                 var user = configuration[DbUserId];
                 var pwd = configuration[DbPassword];
