@@ -27,3 +27,5 @@ stages:
         repository: 'coevent-api'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
+        tags: |
+          latest
