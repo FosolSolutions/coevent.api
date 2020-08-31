@@ -38,3 +38,4 @@ stages:
         repository: 'coevent-api'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+    
