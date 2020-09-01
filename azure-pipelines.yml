@@ -26,6 +26,7 @@ stages:
         containerRegistry: 'Azure Docker Registry - Fosol'
         repository: 'coevent-api'
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: 'Dockerfile'
         tags: |
           latest
+          $(tag)
