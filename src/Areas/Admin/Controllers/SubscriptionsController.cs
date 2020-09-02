@@ -10,9 +10,9 @@ namespace CoEvent.Api.Areas.Data.Controllers
     /// </summary>
     [Produces("application/json")]
     [Area("admin")]
-    [Route("[area]/subscription/[controller]")]
+    [Route("[area]/subscriptions/[controller]")]
     [Authorize]
-    public sealed class SubscriptionController : ApiController
+    public sealed class SubscriptionsController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -20,10 +20,10 @@ namespace CoEvent.Api.Areas.Data.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a SubscriptionController object.
+        /// Creates a new instance of a SubscriptionsController object.
         /// </summary>
         /// <param name="datasource"></param>
-        public SubscriptionController(IDataSource datasource)
+        public SubscriptionsController(IDataSource datasource)
         {
             _dataSource = datasource;
         }
@@ -48,7 +48,7 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// </summary>
         /// <param name="subscription"></param>
         /// <returns></returns>
-        [HttpPost("/[area]/[controller]")]
+        [HttpPost]
         public IActionResult AddSubscription([FromBody] CoEvent.Models.Subscription subscription)
         {
             _dataSource.Subscriptions.Add(subscription);
@@ -60,10 +60,11 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// <summary>
         /// Updates the specified subscription in the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="subscription"></param>
         /// <returns></returns>
-        [HttpPut("/[area]/[controller]")]
-        public IActionResult UpdateSubscription([FromBody] CoEvent.Models.Subscription subscription)
+        [HttpPut("{id}")]
+        public IActionResult UpdateSubscription(int id, [FromBody] CoEvent.Models.Subscription subscription)
         {
             _dataSource.Subscriptions.Update(subscription);
             _dataSource.CommitTransaction();
@@ -74,10 +75,11 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// <summary>
         /// Deletes the specified subscription from the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="subscription"></param>
         /// <returns></returns>
-        [HttpDelete("/[area]/[controller]")]
-        public IActionResult DeleteSubscription([FromBody] CoEvent.Models.Subscription subscription)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteSubscription(int id, [FromBody] CoEvent.Models.Subscription subscription)
         {
             _dataSource.Subscriptions.Remove(subscription);
             _dataSource.CommitTransaction();

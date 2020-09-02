@@ -13,14 +13,14 @@ using System.Threading.Tasks;
 namespace CoEvent.Api.Areas.Manage.Controllers
 {
     /// <summary>
-    /// ParticipantController class, provides endpoints to manage participants.
+    /// ParticipantsController class, provides endpoints to manage participants.
     /// </summary>
     [Produces("application/json")]
     [Area("manage")]
     [Route("[area]/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public class ParticipantController : ApiController
+    public class ParticipantsController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -29,11 +29,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a ParticipantController object, and initializes it with the specified properties.
+        /// Creates a new instance of a ParticipantsController object, and initializes it with the specified properties.
         /// </summary>
         /// <param name="datasource"></param>
         /// <param name="mailClient"></param>
-        public ParticipantController(IDataSource datasource, MailClient mailClient)
+        public ParticipantsController(IDataSource datasource, MailClient mailClient)
         {
             _dataSource = datasource;
             _mailClient = mailClient;
@@ -46,7 +46,7 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="id">The unique key to identify the participant.</param>
         /// <returns></returns>
-        [HttpGet("{id}", Name = nameof(GetParticipant))]
+        [HttpGet("{id:int}", Name = nameof(GetParticipant))]
         public IActionResult GetParticipant(int id)
         {
             var participant = _dataSource.Participants.Get(id);
@@ -59,7 +59,7 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="key">The unique key to identify the participant.</param>
         /// <returns></returns>
-        [HttpGet("{key}")]
+        [HttpGet("{key:guid}")]
         public IActionResult GetParticipant(Guid key)
         {
             var participant = _dataSource.Participants.Get(key);
@@ -70,16 +70,16 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Get the participants for the specified calendar.
         /// </summary>
-        /// <param name="calendarId">The unique id of the calendar.</param>
+        /// <param name="id">The unique id of the calendar.</param>
         /// <param name="page">The page number.</param>
         /// <param name="quantity">The number of participants to return in a single request.</param>
         /// <returns></returns>
-        [HttpGet("/[area]/calendar/{calendarId}/participants")]
-        public IActionResult GetParticipantsForCalendar(int calendarId, [FromQuery] int page = 1, [FromQuery] int quantity = 20)
+        [HttpGet("/[area]/calendars/{id}/[controller]")]
+        public IActionResult GetParticipantsForCalendar(int id, [FromQuery] int page = 1, [FromQuery] int quantity = 20)
         {
             var take = quantity < 1 ? 20 : quantity;
             var skip = page > 1 ? page - 1 * take : 0;
-            var participants = _dataSource.Participants.GetForCalendar(calendarId, skip, take);
+            var participants = _dataSource.Participants.GetForCalendar(id, skip, take);
             // TODO: Need a PageRequest object.
             return Ok(participants);
         }
@@ -89,7 +89,7 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="participant"></param>
         /// <returns></returns>
-        [HttpPost("/[area]/[controller]")]
+        [HttpPost()]
         public IActionResult AddParticipant([FromBody] Participant participant)
         {
             _dataSource.Participants.Add(participant);
@@ -103,8 +103,8 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="participant"></param>
         /// <returns></returns>
-        [HttpPut("/[area]/[controller]")]
-        public IActionResult UpdateParticipant([FromBody] Participant participant)
+        [HttpPut("{id}")]
+        public IActionResult UpdateParticipant(int id, [FromBody] Participant participant)
         {
             _dataSource.Participants.Update(participant);
             _dataSource.CommitTransaction();
@@ -117,8 +117,8 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="participant"></param>
         /// <returns></returns>
-        [HttpDelete("/[area]/[controller]")]
-        public IActionResult DeleteParticipant([FromBody] Participant participant)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteParticipant(int id, [FromBody] Participant participant)
         {
             _dataSource.Participants.Remove(participant);
             _dataSource.CommitTransaction();
@@ -131,7 +131,7 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="id">The unique id of the participant.</param>
         /// <returns>True if the invitation was successfully sent.</returns>
-        [HttpPut("invite/{id}")]
+        [HttpPut("{id}/invite")]
         public async Task<IActionResult> InviteParticipant(int id)
         {
             var participant = _dataSource.Participants.Get(id); // TODO: Only a user with admin can do this.
@@ -154,8 +154,8 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="id">The calendar 'id'.</param>
         /// <returns>True if the invitation was successfully sent.</returns>
-        [HttpPut("invite/all/{id}")]
-        public async Task<IActionResult> InviteAllParticipants(int id)
+        [HttpPut("/[area]/calendars/{id}/[controller]/invite")]
+        public async Task<IActionResult> InviteAllParticipantsToCalendar(int id)
         {
             var participants = _dataSource.Participants.GetForCalendar(id); // TODO: Only a user with admin can do this.
             var errors = new List<string>();

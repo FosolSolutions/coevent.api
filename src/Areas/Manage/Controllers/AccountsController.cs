@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoEvent.Api.Areas.Data.Controllers
 {
     /// <summary>
-    /// AccountController sealed class, provides API endpoints for calendar accounts.
+    /// AccountsController sealed class, provides API endpoints for calendar accounts.
     /// </summary>
     [Produces("application/json")]
     [Area("manage")]
     [Route("[area]/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class AccountController : ApiController
+    public sealed class AccountsController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -23,10 +23,10 @@ namespace CoEvent.Api.Areas.Data.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a AccountController object.
+        /// Creates a new instance of a AccountsController object.
         /// </summary>
         /// <param name="datasource"></param>
-        public AccountController(IDataSource datasource)
+        public AccountsController(IDataSource datasource)
         {
             _dataSource = datasource;
         }
@@ -51,7 +51,7 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        [HttpPost("/[area]/[controller]")]
+        [HttpPost()]
         public IActionResult AddAccount([FromBody] Account account)
         {
             _dataSource.Accounts.Add(account);
@@ -63,10 +63,11 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// <summary>
         /// Updates the specified account in the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="account"></param>
         /// <returns></returns>
-        [HttpPut("/[area]/[controller]")]
-        public IActionResult UpdateAccount([FromBody] Account account)
+        [HttpPut("{id}")]
+        public IActionResult UpdateAccount(int id, [FromBody] Account account)
         {
             _dataSource.Accounts.Update(account);
             _dataSource.CommitTransaction();
@@ -77,10 +78,11 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// <summary>
         /// Deletes the specified account from the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="account"></param>
         /// <returns></returns>
-        [HttpDelete("/[area]/[controller]")]
-        public IActionResult DeleteAccount([FromBody] Account account)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAccount(int id, [FromBody] Account account)
         {
             _dataSource.Accounts.Remove(account);
             _dataSource.CommitTransaction();

@@ -17,14 +17,14 @@ using System.Threading.Tasks;
 namespace CoEvent.Api.Areas.Manage.Controllers
 {
     /// <summary>
-    /// CalendarController class, provides API endpoints for calendars.
+    /// CalendarsController class, provides API endpoints for calendars.
     /// </summary>
     [Produces("application/json")]
     [Area("manage")]
     [Route("[area]/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class CalendarController : ApiController
+    public sealed class CalendarsController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -33,11 +33,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a CalendarController object.
+        /// Creates a new instance of a CalendarsController object.
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="mailClient"></param>
-        public CalendarController(IDataSource dataSource, MailClient mailClient)
+        public CalendarsController(IDataSource dataSource, MailClient mailClient)
         {
             _dataSource = dataSource;
             _mailClient = mailClient;
@@ -50,7 +50,7 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="page">The page number (default: 1).</param>
         /// <returns>An array calendar JSON data objects.</returns>
-        [HttpGet("/[area]/calendars")]
+        [HttpGet()]
         public IActionResult GetCalendars(int page)
         {
             var skip = page <= 0 ? 0 : page - 1;
@@ -86,7 +86,7 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="calendar"></param>
         /// <returns></returns>
-        [HttpPost("/[area]/[controller]")]
+        [HttpPost()]
         public IActionResult AddCalendar([FromBody] Calendar calendar)
         {
             _dataSource.Calendars.Add(calendar);
@@ -98,10 +98,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Update the specified calendar in the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="calendar"></param>
         /// <returns></returns>
-        [HttpPut("/[area]/[controller]")]
-        public IActionResult UpdateCalendar([FromBody] Calendar calendar)
+        [HttpPut("{id}")]
+        public IActionResult UpdateCalendar(int id, [FromBody] Calendar calendar)
         {
             _dataSource.Calendars.Update(calendar);
             _dataSource.CommitTransaction();
@@ -112,10 +113,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Delete the specified calendar from the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="calendar"></param>
         /// <returns></returns>
-        [HttpDelete("/[area]/[controller]")]
-        public IActionResult DeleteCalendar([FromBody] Calendar calendar)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCalendar(int id, [FromBody] Calendar calendar)
         {
             _dataSource.Calendars.Remove(calendar);
             _dataSource.CommitTransaction();
@@ -127,12 +129,12 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// Makes the specified calendar the active calendar for the currently signed in user.
         /// Updates the users claims.
         /// </summary>
-        /// <param name="calendarId"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPut("select/{calendarId}"), Authorize]
-        public async Task<IActionResult> SelectCalendar(int calendarId)
+        [HttpPut("{id}/select"), Authorize]
+        public async Task<IActionResult> SelectCalendar(int id)
         {
-            _dataSource.Calendars.SelectCalendar(User, calendarId);
+            _dataSource.Calendars.SelectCalendar(User, id);
             var principal = new ClaimsPrincipal(User);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
@@ -142,12 +144,12 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Send emails out to all the participants in the specified calendar.
         /// </summary>
-        /// <param name="calendarId"></param>
+        /// <param name="id"></param>
         /// <returns>Either 'true' for full success, or a collection of errors that occured when sending emails.</returns>
-        [HttpPut("{calendarId}/invite/participants")]
-        public IActionResult InviteParticipants(int calendarId)
+        [HttpPut("{id}/invite/participants")]
+        public IActionResult InviteParticipants(int id)
         {
-            var participants = _dataSource.Participants.GetForCalendar(calendarId);
+            var participants = _dataSource.Participants.GetForCalendar(id);
             var errors = new List<Exception>();
 
             foreach (var participant in participants)

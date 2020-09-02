@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoEvent.Api.Areas.Data.Controllers
 {
     /// <summary>
-    /// UserController sealed class, provides API endpoints for calendar users.
+    /// UsersController sealed class, provides API endpoints for calendar users.
     /// </summary>
     [Produces("application/json")]
     [Area("manage")]
     [Route("[area]/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class UserController : ApiController
+    public sealed class UsersController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -22,10 +22,10 @@ namespace CoEvent.Api.Areas.Data.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a UserController object.
+        /// Creates a new instance of a UsersController object.
         /// </summary>
         /// <param name="datasource"></param>
-        public UserController(IDataSource datasource)
+        public UsersController(IDataSource datasource)
         {
             _dataSource = datasource;
         }
@@ -50,7 +50,7 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        [HttpPost("/[area]/[controller]")]
+        [HttpPost()]
         public IActionResult AddUser([FromBody] CoEvent.Models.User user)
         {
             _dataSource.Users.Add(user);
@@ -62,10 +62,11 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// <summary>
         /// Updates the specified user in the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        [HttpPut("/[area]/[controller]")]
-        public IActionResult UpdateUser([FromBody] CoEvent.Models.User user)
+        [HttpPut("{id}")]
+        public IActionResult UpdateUser(int id, [FromBody] CoEvent.Models.User user)
         {
             _dataSource.Users.Update(user);
             _dataSource.CommitTransaction();
@@ -76,9 +77,10 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// <summary>
         /// Deletes the specified user from the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        [HttpDelete("/[area]/[controller]")]
+        [HttpDelete("{id}")]
         public IActionResult DeleteUser([FromBody] CoEvent.Models.User user)
         {
             _dataSource.Users.Remove(user);

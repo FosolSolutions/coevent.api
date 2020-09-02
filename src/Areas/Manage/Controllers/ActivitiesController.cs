@@ -8,14 +8,14 @@ using System;
 namespace CoEvent.Api.Areas.Manage.Controllers
 {
     /// <summary>
-    /// ActivityController sealed class, provides API endpoints for calendar event activities.
+    /// ActivitiesController sealed class, provides API endpoints for calendar event activities.
     /// </summary>
     [Produces("application/json")]
     [Area("manage")]
-    [Route("[area]/calendar/event/[controller]")]
+    [Route("[area]/calendars/events/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class ActivityController : ApiController
+    public sealed class ActivitiesController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -23,10 +23,10 @@ namespace CoEvent.Api.Areas.Manage.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a ActivityController object.
+        /// Creates a new instance of a ActivitiesController object.
         /// </summary>
         /// <param name="datasource"></param>
-        public ActivityController(IDataSource datasource)
+        public ActivitiesController(IDataSource datasource)
         {
             _dataSource = datasource;
         }
@@ -51,7 +51,7 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="activity">The activity to add to the datasource. JSON data object in the body of the request.</param>
         /// <returns>The activity that was added to the datasource.</returns>
-        [HttpPost("/[area]/[controller]")]
+        [HttpPost()]
         public IActionResult AddActivity([FromBody] CoEvent.Models.Activity activity)
         {
             _dataSource.Activities.Add(activity);
@@ -63,10 +63,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Update the specified activity in the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="activity">The activity to update in the datasource. JSON data object in the body of the request.</param>
         /// <returns>The activity that was updated in the datasource.</returns>
-        [HttpPut("/[area]/[controller]")]
-        public IActionResult UpdateActivity([FromBody] CoEvent.Models.Activity activity)
+        [HttpPut("{id}")]
+        public IActionResult UpdateActivity(int id, [FromBody] CoEvent.Models.Activity activity)
         {
             _dataSource.Activities.Update(activity);
             _dataSource.CommitTransaction();
@@ -77,10 +78,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Delete the specified activity from the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="activity">The activity to delete from the datasource. JSON data object in the body of the request.</param>
         /// <returns>true if successful, or an error JSON object.</returns>
-        [HttpDelete("/[area]/[controller]")]
-        public IActionResult DeleteActivity([FromBody] CoEvent.Models.Activity activity)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteActivity(int id, [FromBody] CoEvent.Models.Activity activity)
         {
             _dataSource.Activities.Remove(activity);
             _dataSource.CommitTransaction();

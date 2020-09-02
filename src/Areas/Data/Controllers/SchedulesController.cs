@@ -53,8 +53,8 @@ namespace CoEvent.Api.Areas.Data.Controllers
         /// <param name="startOn">The start date for the schedule to return.  Defaults to now.</param>
         /// <param name="endOn">The end date for the schedule to return.</param>
         /// <returns>A schedule JSON data object with all events within the specified date range.</returns>
-        [HttpGet("{id}")]
-        public IActionResult GetSchedule(int id, DateTime? startOn = null, DateTime? endOn = null)
+        [HttpGet("{id}/events")]
+        public IActionResult GetScheduleWithEvents(int id, DateTime? startOn = null, DateTime? endOn = null)
         {
             var start = startOn ?? DateTime.UtcNow;
             // Start at the beginning of the week.

@@ -19,6 +19,14 @@ using CoEvent.Api.Helpers.Middleware;
 using CoEvent.Api.Helpers;
 using CoEvent.Core.Mvc;
 using System.Linq;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
+using System.Reflection;
+using System.IO;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace CoEvent.Api
 {
@@ -64,7 +72,10 @@ namespace CoEvent.Api
         #endregion
 
         #region Methods
-
+        /// <summary>
+        /// Configure dependency injection.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
@@ -184,6 +195,64 @@ namespace CoEvent.Api
                 options.MultipartBodyLengthLimit = int.MaxValue; // TODO: Add to configuration
             });
             services.AddSingleton<JsonErrorHandler>();
+
+
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ApiVersionReader = new HeaderApiVersionReader("api-version");
+                // options.DefaultApiVersion = new ApiVersion(1, 0);
+            });
+            services.AddVersionedApiExplorer(options =>
+            {
+                // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                options.GroupNameFormat = "'v'VVV";
+
+                // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                // can also be used to control the format of the API version in route templates
+                options.SubstituteApiVersionInUrl = true;
+
+            });
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, Helpers.Swagger.SwaggerOptions>();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.EnableAnnotations(true);
+                options.CustomSchemaIds(o => o.FullName);
+                options.OperationFilter<Helpers.Swagger.SwaggerDefaultValues>();
+                options.DocumentFilter<Helpers.Swagger.SwaggerDocumentFilter>();
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Description = "Please enter into field the word 'Bearer' following by space and JWT",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+
+                        },
+                        new List<string>()
+                    }
+                });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(System.AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+            });
         }
 
         /// <summary>
@@ -191,12 +260,26 @@ namespace CoEvent.Api
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        /// <param name="provider"></param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger(options =>
+            {
+                options.RouteTemplate = this.Configuration.GetValue<string>("Swagger:RouteTemplate");
+            });
+            app.UseSwaggerUI(options =>
+            {
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint(String.Format(this.Configuration.GetValue<string>("Swagger:EndpointPath"), description.GroupName), description.GroupName);
+                }
+                options.RoutePrefix = this.Configuration.GetValue<string>("Swagger:RoutePrefix");
+            });
 
             app.UseHttpsRedirection();
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));

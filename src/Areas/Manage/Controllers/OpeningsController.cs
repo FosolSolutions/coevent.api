@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoEvent.Api.Areas.Manage.Controllers
 {
     /// <summary>
-    /// OpeningController sealed class, provides API endpoints for calendar event openings.
+    /// OpeningsController sealed class, provides API endpoints for calendar event openings.
     /// </summary>
     [Produces("application/json")]
     [Area("manage")]
-    [Route("[area]/calendar/event/activity/[controller]")]
+    [Route("[area]/calendars/events/activities/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class OpeningController : ApiController
+    public sealed class OpeningsController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -22,10 +22,10 @@ namespace CoEvent.Api.Areas.Manage.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a OpeningController object.
+        /// Creates a new instance of a OpeningsController object.
         /// </summary>
         /// <param name="datasource"></param>
-        public OpeningController(IDataSource datasource)
+        public OpeningsController(IDataSource datasource)
         {
             _dataSource = datasource;
         }
@@ -49,7 +49,7 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="opening"></param>
         /// <returns></returns>
-        [HttpPost("/[area]/[controller]")]
+        [HttpPost()]
         public IActionResult AddOpening([FromBody] CoEvent.Models.Opening opening)
         {
             _dataSource.Openings.Add(opening);
@@ -61,10 +61,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Update the specified opening in the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="opening"></param>
         /// <returns></returns>
-        [HttpPut("/[area]/[controller]")]
-        public IActionResult UpdateOpening([FromBody] CoEvent.Models.Opening opening)
+        [HttpPut("{id}")]
+        public IActionResult UpdateOpening(int id, [FromBody] CoEvent.Models.Opening opening)
         {
             _dataSource.Openings.Update(opening);
             _dataSource.CommitTransaction();
@@ -75,10 +76,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Delete the specified opening from the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="opening"></param>
         /// <returns></returns>
-        [HttpDelete("/[area]/[controller]")]
-        public IActionResult DeleteOpening([FromBody] CoEvent.Models.Opening opening)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteOpening(int id, [FromBody] CoEvent.Models.Opening opening)
         {
             _dataSource.Openings.Remove(opening);
             _dataSource.CommitTransaction();

@@ -10,14 +10,14 @@ using System.Linq;
 namespace CoEvent.Api.Areas.Manage.Controllers
 {
     /// <summary>
-    /// EventController sealed class, provides API endpoints for calendar events.
+    /// EventsController sealed class, provides API endpoints for calendar events.
     /// </summary>
     [Produces("application/json")]
     [Area("manage")]
-    [Route("[area]/calendar/[controller]")]
+    [Route("[area]/calendars/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class EventController : ApiController
+    public sealed class EventsController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -25,10 +25,10 @@ namespace CoEvent.Api.Areas.Manage.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a EventController object.
+        /// Creates a new instance of a EventsController object.
         /// </summary>
         /// <param name="datasource"></param>
-        public EventController(IDataSource datasource)
+        public EventsController(IDataSource datasource)
         {
             _dataSource = datasource;
         }
@@ -55,7 +55,7 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <param name="startOn">The start date for the calendar to return.  Defaults to now.</param>
         /// <param name="endOn">The end date for the calendar to return.</param>
         /// <returns>An array of events.</returns>
-        [HttpGet("/[area]/calendar/{id}/events")]
+        [HttpGet("/[area]/calendars/{id}/[controller]")]
         public IActionResult GetEventsForCalendar(int id, DateTime? startOn = null, DateTime? endOn = null)
         {
             var start = startOn ?? DateTime.UtcNow;
@@ -72,7 +72,7 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// </summary>
         /// <param name="cevent"></param>
         /// <returns></returns>
-        [HttpPost("/[area]/[controller]")]
+        [HttpPost()]
         public IActionResult AddEvent([FromBody] Event cevent)
         {
             _dataSource.Events.Add(cevent);
@@ -84,10 +84,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Updates the specified event in the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="cevent"></param>
         /// <returns></returns>
-        [HttpPut("/[area]/[controller]")]
-        public IActionResult UpdateEvent([FromBody] Event cevent)
+        [HttpPut("{id}")]
+        public IActionResult UpdateEvent(int id, [FromBody] Event cevent)
         {
             _dataSource.Events.Update(cevent);
             _dataSource.CommitTransaction();
@@ -98,10 +99,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Deletes the specified event from the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="cevent"></param>
         /// <returns></returns>
-        [HttpDelete("/[area]/[controller]")]
-        public IActionResult DeleteEvent([FromBody] Event cevent)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteEvent(int id, [FromBody] Event cevent)
         {
             _dataSource.Events.Remove(cevent);
             _dataSource.CommitTransaction();

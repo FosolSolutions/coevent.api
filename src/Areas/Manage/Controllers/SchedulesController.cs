@@ -12,14 +12,14 @@ using System.Linq;
 namespace CoEvent.Api.Areas.Manage.Controllers
 {
     /// <summary>
-    /// ScheduleController class, provides API endpoints for schedules.
+    /// SchedulesController class, provides API endpoints for schedules.
     /// </summary>
     [Produces("application/json")]
     [Area("manage")]
     [Route("[area]/[controller]")]
     [Authorize]
     [ValidateModelFilter]
-    public sealed class ScheduleController : ApiController
+    public sealed class SchedulesController : ApiController
     {
         #region Variables
         private readonly IDataSource _dataSource;
@@ -27,10 +27,10 @@ namespace CoEvent.Api.Areas.Manage.Controllers
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a ScheduleController object.
+        /// Creates a new instance of a SchedulesController object.
         /// </summary>
         /// <param name="dataSource"></param>
-        public ScheduleController(IDataSource dataSource)
+        public SchedulesController(IDataSource dataSource)
         {
             _dataSource = dataSource;
         }
@@ -38,14 +38,26 @@ namespace CoEvent.Api.Areas.Manage.Controllers
 
         #region Methods
         /// <summary>
+        /// Returns the specified schedule.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public IActionResult GetSchedule(int id)
+        {
+            var schedule = _dataSource.Schedules.Get(id);
+            return Ok(schedule);
+        }
+
+        /// <summary>
         /// Returns the specified schedule and its events for the current week (or timespan).
         /// </summary>
         /// <param name="id">The primary key to identify the schedule.</param>
         /// <param name="startOn">The start date for the schedule to return.  Defaults to now.</param>
         /// <param name="endOn">The end date for the schedule to return.</param>
         /// <returns>A schedule JSON data object with all events within the specified date range.</returns>
-        [HttpGet("{id}", Name = nameof(GetSchedule))]
-        public IActionResult GetSchedule(int id, DateTime? startOn = null, DateTime? endOn = null)
+        [HttpGet("{id}/events")]
+        public IActionResult GetScheduleWithEvents(int id, DateTime? startOn = null, DateTime? endOn = null)
         {
             var start = startOn ?? DateTime.UtcNow;
             // Start at the beginning of the week.
@@ -58,23 +70,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         }
 
         /// <summary>
-        /// Returns the specified schedule.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}", Name = nameof(GetSchedule))]
-        public IActionResult GetSchedule(int id)
-        {
-            var schedule = _dataSource.Schedules.Get(id);
-            return Ok(schedule);
-        }
-
-        /// <summary>
         /// Add the specified schedule to the datasource.
         /// </summary>
         /// <param name="schedule"></param>
         /// <returns></returns>
-        [HttpPost("/[area]/[controller]")]
+        [HttpPost()]
         public IActionResult AddSchedule([FromBody] CoEvent.Models.Schedule schedule)
         {
             _dataSource.Schedules.Add(schedule);
@@ -86,10 +86,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Update the specified schedule in the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="schedule"></param>
         /// <returns></returns>
-        [HttpPut("/[area]/[controller]")]
-        public IActionResult UpdateSchedule([FromBody] CoEvent.Models.Schedule schedule)
+        [HttpPut("{id}")]
+        public IActionResult UpdateSchedule(int id, [FromBody] CoEvent.Models.Schedule schedule)
         {
             _dataSource.Schedules.Update(schedule);
             _dataSource.CommitTransaction();
@@ -100,10 +101,11 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// <summary>
         /// Delete the specified schedule from the datasource.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="schedule"></param>
         /// <returns></returns>
-        [HttpDelete("/[area]/[controller]")]
-        public IActionResult DeleteSchedule([FromBody] CoEvent.Models.Schedule schedule)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteSchedule(int id, [FromBody] CoEvent.Models.Schedule schedule)
         {
             _dataSource.Schedules.Remove(schedule);
             _dataSource.CommitTransaction();
@@ -115,16 +117,16 @@ namespace CoEvent.Api.Areas.Manage.Controllers
         /// Add the events to the specified schedule.
         /// Only events within the schedule's date range will be accepted.  All others will return an error message response.
         /// </summary>
-        /// <param name="scheduleId"></param>
+        /// <param name="id"></param>
         /// <param name="events"></param>
         /// <returns></returns>
-        [HttpPost("/{scheduleId}/events")]
-        public IActionResult AddEventsToSchedule(int scheduleId, [FromBody] Event[] events)
+        [HttpPost("{id}/events")]
+        public IActionResult AddEventsToSchedule(int id, [FromBody] Event[] events)
         {
-            var schedule = _dataSource.Schedules.Get(scheduleId);
+            var schedule = _dataSource.Schedules.Get(id);
 
             // Get all the event Ids in the schedule to ensure they are not added again.
-            var eventIds = _dataSource.Events.GetEventIdsForSchedule(scheduleId);
+            var eventIds = _dataSource.Events.GetEventIdsForSchedule(id);
 
             var errors = new List<string>();
             events.ForEach(e =>
