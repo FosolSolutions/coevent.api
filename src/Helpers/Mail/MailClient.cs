@@ -61,13 +61,23 @@ namespace CoEvent.Api.Helpers.Mail
                 Body = $@"
 				Hello {participant.FirstName},
 				<p>
+                    Apology for the earlier invite not working.  Due to technical issues I sent it before the schedule was ready.
+                    This new link should allow you to login and volunteer.
+                    There are some oddities with mobile devices that sometimes requires you to refresh the page.
+                    Please reach out to me if you run into issues.
+                </p>
+                <p>
 					Please use the following link to access the Victoria Ecclesial Volunteer Schedule - <a href=""https://coeventapp.azurewebsites.net/login?key={participant.Key}"">VOLUNTEER LINK</a><br/>
 					This link is specifically generated for you, please do not forward it to someone else.
 				</p>
 				<p>
 					Please be aware that the default Safari browser on iPad and iPhone will not work.  However if you install the Chrome browser it will.
 				</p>
-				Love in Christ, Jeremy"
+                <p>
+				    Love in Christ, Jeremy<br/>
+                    m: 778 977-4786<br/>
+                    e: jeremymfoster@hotmail.com
+                </p>"
             };
 
             message.To.Add(new MailAddress(participant.Email));
