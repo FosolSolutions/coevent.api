@@ -70,9 +70,6 @@ namespace CoEvent.Api.Helpers.Mail
 					Please use the following link to access the Victoria Ecclesial Volunteer Schedule - <a href=""https://coeventapp.azurewebsites.net/login?key={participant.Key}"">VOLUNTEER LINK</a><br/>
 					This link is specifically generated for you, please do not forward it to someone else.
 				</p>
-				<p>
-					Please be aware that the default Safari browser on iPad and iPhone will not work.  However if you install the Chrome browser it will.
-				</p>
                 <p>
 				    Love in Christ, Jeremy<br/>
                     m: 778 977-4786<br/>
