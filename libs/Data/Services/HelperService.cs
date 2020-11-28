@@ -234,14 +234,21 @@ namespace CoEvent.Data.Services
             }
 
             // Bible Class
-            var thursday = start.DayOfWeek <= DayOfWeek.Thursday ? start.AddDays(4 - (int)start.DayOfWeek) : start.AddDays(7 + (int)start.DayOfWeek - 4);
+            var thursday = start.DayOfWeek switch
+            {
+                var dayOfWeek when
+                    dayOfWeek <= DayOfWeek.Thursday => start.AddDays(4 - (int)start.DayOfWeek),
+                DayOfWeek.Friday => start.AddDays(6),
+                DayOfWeek.Saturday => start.AddDays(5),
+                _ => start
+            };
             Event firstBibleClass = null;
             while (thursday <= end)
             {
                 // Lecture
                 var bibleClass = new Event(calendar, "Bible Class", thursday.AddHours(19), thursday.AddHours(20))
                 {
-                    Description = "Sunday night Bible talk.",
+                    Description = "Thursday night Bible class.",
                     AddedById = userId,
                     ParentEvent = firstBibleClass,
                     Repetition = EventRepetition.Weekly,
