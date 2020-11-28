@@ -123,11 +123,38 @@ namespace CoEvent.Data.Services
 
             // Sunday Memorial
             var sunday = start.DayOfWeek == DayOfWeek.Sunday ? start : start.AddDays(7 - (int)start.DayOfWeek);
+            Event firstSundaySchool = null;
             Event firstMemorial = null;
             while (sunday <= end)
             {
-                // Memorial
+                // Sunday School
+                var school = new Event(calendar, "Sunday School", sunday.AddHours(9), sunday.AddHours(10))
+                {
+                    Description = "Adult Sunday School.",
+                    AddedById = userId,
+                    ParentEvent = firstSundaySchool,
+                    Repetition = EventRepetition.Weekly,
+                    RepetitionEndOn = end,
+                    RepetitionSize = 1
+                };
 
+                var aTeach = new Activity(school, "Class") { AddedById = userId, Sequence = 2 };
+                var oTeach = new Opening(aTeach, "Teach", 1, 1, OpeningType.Application, ApplicationProcess.AutoAccept, CriteriaRule.Visibility) { AddedById = userId };
+                oTeach.Actions.Add(new Process(oTeach, ActionTrigger.Accept, "Add(Participant.Answers, Opening.Tags, Question.Caption=\"Title\");") { AddedById = userId });
+                oTeach.Actions.Add(new Process(oTeach, ActionTrigger.Unapply, "Delete(Opening.Tags, Tag.Key=\"Title\");") { AddedById = userId });
+                oTeach.Questions.Add(new OpeningQuestion(oTeach, qTitle));
+                aTeach.Openings.Add(oTeach);
+                aTeach.Criteria.Add(new ActivityCriteria(aTeach, lecturer));
+                school.Activities.Add(aTeach);
+
+                calendar.Events.Add(school);
+
+                if (firstSundaySchool == null)
+                {
+                    firstSundaySchool = school;
+                }
+
+                // Memorial
                 var memorial = new Event(calendar, "Memorial Meeting", sunday.AddHours(11), sunday.AddHours(13))
                 {
                     Description = "Sunday memorial meeting.",
