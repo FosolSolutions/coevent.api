@@ -15,14 +15,14 @@
       "launchUrl": "filestation/files?path=/talks/Bible Classes",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ConnectionStrings__ApiData": "SERVER=localhost,5433;DATABASE=coevent;"
+        "ConnectionStrings__ApiData": "SERVER=localhost,51433;DATABASE=coevent;"
       }
     },
     "CoEvent.Api": {
       "commandName": "Project",
       "launchBrowser": false,
       "launchUrl": "filestation/files?path=/talks/Bible Classes",
-      "applicationUrl": "https://localhost:10443;http://localhost:1080",
+      "applicationUrl": "https://localhost:50444;http://localhost:51081",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "VS"
       }
