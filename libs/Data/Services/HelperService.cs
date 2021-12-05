@@ -442,7 +442,7 @@ namespace CoEvent.Data.Services
                     participants.Add(CreateParticipant(calendar, user, "T Snobelen", "Taleigh", "Snobelen", "taleigh.rae@gmail.com", Gender.Female, "", "", "", "Member=true, Sister=true, Skill=Emblems, Skill=Clean"));
                     // participants.Add(CreateParticipant(calendar, user, "A Starcher", "Al", "Starcher", "", Gender.Male, "", "", "", "Member=true, Brother=true, Skill=Read, Skill=Pray"));
                     participants.Add(CreateParticipant(calendar, user, "B Stodel", "Bob", "Stodel", "rwstodel@gmail.com", Gender.Male, "", "", "", "Member=true, Brother=true, Skill=Preside, Skill=Exhort, Skill=Serve, Skill=Read, Skill=Pray, Skill=Doorman, Skill=Lecturer, Skill=Bible Class, Skill=Emblems, Skill=Clean"));
-                    participants.Add(CreateParticipant(calendar, user, "D Stodel", "Dianna", "Stodel", "dianastodel@gmail.com", Gender.Female, "", "", "", "Member=true, Sister=true, Skill=Emblems, Skill=Clean"));
+                    participants.Add(CreateParticipant(calendar, user, "D Stodel", "Diana", "Stodel", "dianastodel@gmail.com", Gender.Female, "", "", "", "Member=true, Sister=true, Skill=Emblems, Skill=Clean"));
                     participants.Add(CreateParticipant(calendar, user, "V Stodel", "Vic", "Stodel", "marie-vics@shaw.ca", Gender.Male, "", "", "", "Member=true, Brother=true, Skill=Read, Skill=Pray"));
                     participants.Add(CreateParticipant(calendar, user, "M Stodel", "Marie", "Stodel", "marie-vics@shaw.ca", Gender.Female, "", "", "", "Member=true, Sister=true, Skill=Emblems"));
                     // participants.Add(CreateParticipant(calendar, user, "R Wallace", "Rob", "Wallace", "", Gender.Male, "", "", "", "Member=true, Brother=true"));
